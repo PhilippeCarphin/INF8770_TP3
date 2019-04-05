@@ -10,48 +10,67 @@ import cv2
 from matplotlib import pyplot as plt
 
 
+class Video:
+    def __init__(self, filename):
+        self.cap = cv2.VideoCapture()
+        self.cap.open(filename)
+        if not self.cap.isOpened():
+            raise ValueError(filename)
+
+    def __del__(self):
+        self.cap.release()
+
+    def get_dimensions(self) -> {}:
+        return {
+            'height': self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT),
+            'width':  self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+        }
+
+    def get_cuts(self, algo='naive') -> []:
+        """Compute the time of the cuts in the video,
+        :return a list of the frame numbers where cut occurs
+        """
+        means = []
+        cuts = []
+        while True:
+            (rv, im) = self.cap.read()  # im is a valid image if and only if rv is true
+            if not rv:
+                break
+            frame_mean = im.mean()
+            threshold = 20
+            if means and abs(frame_mean - means[-1]) > threshold:
+                frame_no = int(self.cap.get(cv2.CAP_PROP_POS_FRAMES))
+                cuts.append(frame_no)
+
+            means.append(frame_mean)
+
+        # frame_count = self.cap.get(cv2.CAP_PROP_POS_FRAMES)  # current capture position
+        return cuts
+
+        # print("Read %d frames from video." % frame_count)
+        # print("cuts detected on the following frames: ")
+        # print(cuts)
+        #
+        # plt.plot(means)
+        # plt.title("Mean variation through the video")
+        # plt.show()
+
+
 def main():
     if len(sys.argv) < 2:
         print("Error - file name must be specified as first argument.")
         return
 
-    cap = cv2.VideoCapture()
-    cap.open(sys.argv[1])
-
-    if not cap.isOpened():
-        print("Fatal error - could not open video %s." % sys.argv[1])
+    filename = sys.argv[1]
+    try:
+        video = Video(filename)
+    except ValueError:
+        print("Could not open {}", filename)
         return
-    else:
-        print("Parsing video %s..." % sys.argv[1])
 
-    width  = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
-    height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
-    print("Video Resolution: %d x %d" % (width, height))
+    print("video cuts detected at:")
+    print(video.get_cuts())
 
-    means = []
-    cuts = []
-    while True:
-        (rv, im) = cap.read()   # im is a valid image if and only if rv is true
-        if not rv:
-            break
-        frame_mean = im.mean()
-        threshold = 20
-        if means and abs(frame_mean - means[-1]) > threshold:
-            frame_no = int(cap.get(cv2.CAP_PROP_POS_FRAMES))
-            cuts.append(frame_no)
-
-        means.append(frame_mean)
-
-    frame_count = cap.get(cv2.CAP_PROP_POS_FRAMES)  # current capture position
-    print("Read %d frames from video." % frame_count)
-    print("cuts detected on the following frames: ")
-    print(cuts)
-
-    plt.plot(means)
-    plt.title("Mean variation through the video")
-    plt.show()
-
-    cap.release()
 
 if __name__ == "__main__":
     main()
