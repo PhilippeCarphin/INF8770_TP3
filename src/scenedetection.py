@@ -60,11 +60,22 @@ def main():
     threshold = 70
     fade_cuts = video.get_cuts(threshold=threshold)
 
-    ground_truth = [350, 599, 1482, 1702, 1796, 2015]
+    ground_truth = {
+        'cuts': [350, 599, 1482, 1702, 1796, 2015],
+        'fades': [
+            [199, 206],
+            [316, 322],
+            [401, 407],
+            [504, 512],
+            [1253, 1272],
+            [1251, 1355]
+        ]
+    }
+
     print("Ground Truth : {}".format(ground_truth))
     print("fade_cuts : {}".format(fade_cuts))
 
-    found = util.approximate_intersection(ground_truth, fade_cuts, 30)
+    found = util.approximate_intersection(ground_truth['cuts'], fade_cuts, 30)
     print("Number of frames 'kind of found with fade_cuts detector using threshold {} : {}".format(threshold, found))
 
 
