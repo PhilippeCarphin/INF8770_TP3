@@ -1,3 +1,5 @@
+from termcolor import colored, cprint
+
 
 ground_truth = {
     'cuts': [350, 599, 1482, 1702, 1796, 2015],
@@ -10,6 +12,35 @@ ground_truth = {
         [1351, 1355]
     ]
 }
+
+
+def verify_result(cut_list, threshold=2) -> None:
+    print('\nCuts:')
+    print('expected\treal\tResult')
+    for expected in ground_truth['cuts']:
+        match = None
+        for i in range(expected - threshold, expected + threshold):
+            if i in cut_list:
+                match = i
+                break
+        print(str(expected).ljust(4) + '\t\t' +
+              (str(match) if match else '\t') + '\t', end='')
+        print(colored('Found', 'green') if match else
+              colored("Not found at all", "red"))
+
+    print('\nFades:')
+    cprint('expected\t\treal\tResult', attrs=['bold'])
+    for expected in ground_truth['fades']:
+        match = None
+        for i in range(expected[0] - threshold, expected[1] + threshold):
+            if i in cut_list:
+                match = i
+                break
+        print((str(expected[0]) + '-' + str(expected[1])).ljust(9) + '\t\t' +
+              (str(match).rjust(4) if match else '\t') + '\t', end='')
+        print(colored('Found', 'green') if match else
+              colored("Not found at all", "red"))
+
 
 def cross_check_with_ground_truth(cut_list, threshold=2):
 
