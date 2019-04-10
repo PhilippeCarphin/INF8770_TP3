@@ -59,4 +59,6 @@ def fade_cuts(cap: cv2.VideoCapture, **kwargs) -> []:
     for cut in fade_cut_generator(cap, threshold):
         # print("cut found at {}".format(cut))
         cuts.append(cut)
+
+    cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # rewind video for further uses
     return cuts
