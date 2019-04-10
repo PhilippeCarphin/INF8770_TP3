@@ -4,6 +4,7 @@
 """
 import sys
 import cv2
+from pprint import pprint
 
 import detectionalgo as algo
 import util
@@ -52,32 +53,20 @@ def main():
         print("Could not open {}", filename)
         return
 
-    print("video cuts detected at:")
-    print(video.get_cuts())
+    naive_cuts = video.get_cuts()
+    print("video cuts detected at: {}".format(naive_cuts))
+
+    print("cross_check_with_ground_truth(naive_cuts :")
+    pprint(util.cross_check_with_ground_truth(naive_cuts, 10))
+
 
     print("Using Algorithm fade_cuts")
     video.set_algo('fade_cuts')
     threshold = 70
     fade_cuts = video.get_cuts(threshold=threshold)
 
-    ground_truth = {
-        'cuts': [350, 599, 1482, 1702, 1796, 2015],
-        'fades': [
-            [199, 206],
-            [316, 322],
-            [401, 407],
-            [504, 512],
-            [1253, 1272],
-            [1251, 1355]
-        ]
-    }
-
-    print("Ground Truth : {}".format(ground_truth))
-    print("fade_cuts : {}".format(fade_cuts))
-
-    found = util.approximate_intersection(ground_truth['cuts'], fade_cuts, 30)
-    print("Number of frames 'kind of found with fade_cuts detector using threshold {} : {}".format(threshold, found))
-
+    print("cross_check_with_ground_truth :")
+    pprint(util.cross_check_with_ground_truth(fade_cuts, 10))
 
 if __name__ == "__main__":
     main()
