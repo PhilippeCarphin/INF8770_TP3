@@ -36,15 +36,11 @@ def fade_cut_generator(cap: cv2.VideoCapture, threshold=100):
             break
         current_mean = im.mean()
 
-        if not means:
-            means.append(current_mean)
-            continue
-
-        last_mean = means[-1]
-        means.append(current_mean)
-        if ((current_mean >= threshold and last_mean < threshold)
-                or (current_mean < threshold and last_mean >= threshold)):
+        if means and ((current_mean >= threshold and means[-1] < threshold)
+                      or (current_mean < threshold and means[-1] >= threshold)):
             yield int(cap.get(cv2.CAP_PROP_POS_FRAMES))
+
+        means.append(current_mean)
 
 
 def fade_cuts(cap: cv2.VideoCapture, **kwargs) -> []:
