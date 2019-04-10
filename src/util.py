@@ -11,8 +11,13 @@ ground_truth = {
     ]
 }
 
-def cross_check_with_ground_truth(cut_list, threshold=10):
+def cross_check_with_ground_truth(cut_list, threshold=2):
 
+    # TODO Add reporting of false positives:
+    #  I.E. Elements in cut_list that do not correspond to an
+    #  actual scene change
+    #  Maybe if something is good, remove it  from cut_list (or temp working list)
+    #  and return what is left of that as BS list elements.
 
     found_cuts = []
     unfound_cuts = []
@@ -40,12 +45,26 @@ def cross_check_with_ground_truth(cut_list, threshold=10):
         else:
             unfound_fades.append(interval)
 
+    false_positives = []
+    real_positives = []
+    for cut in cut_list:
+        if cut in found_cuts:
+            real_positives.append(cut)
+
+        else:
+            for interval in found_fades:
+                if cut == interval['cut']:
+                    real_positives.append(cut)
+            else:
+                false_positives.append(cut)
+
     return {
-        'input_list': cut_list,
         'found_cuts': found_cuts,
         'found_fades': found_fades,
         'unfound_cuts': unfound_cuts,
         'unfound_fades': unfound_fades,
+        'false_positives': false_positives,
+        'real_positives': real_positives,
     }
 
 

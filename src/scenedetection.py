@@ -62,7 +62,7 @@ def main():
 
     print("Using Algorithm fade_cuts")
     video.set_algo('fade_cuts')
-    threshold = 70
+    threshold = 100
     fade_cuts = video.get_cuts(threshold=threshold)
 
     print("cross_check_with_ground_truth :")
