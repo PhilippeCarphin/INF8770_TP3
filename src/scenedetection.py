@@ -54,9 +54,13 @@ def main():
     print("video cuts detected at:")
     print(video.get_cuts())
 
-    print("Using Algorithm <XXXX> TODO")
-    # video.set_algo('XXXX')
-    print(video.get_cuts())
+    print("Using Algorithm fade_cuts")
+    video.set_algo('fade_cuts')
+    fade_cuts = video.get_cuts()
+    ground_truth = [350, 599, 1482, 1702, 1796, 2015]
+    print("Ground Truth : {}".format(ground_truth))
+    print("fade_cuts : {}".format(fade_cuts))
+
 
 
 if __name__ == "__main__":
