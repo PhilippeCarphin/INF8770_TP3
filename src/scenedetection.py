@@ -31,11 +31,11 @@ class Video:
         except:
             sys.exit('algorithm not found')
 
-    def get_cuts(self) -> []:
+    def get_cuts(self, **kwargs) -> []:
         """Compute the time of the cuts in the video,
         :return a list of the frame numbers where cut occurs
         """
-        cuts = self.detection_algo(self.cap)
+        cuts = self.detection_algo(self.cap, **kwargs)
         return cuts
 
 

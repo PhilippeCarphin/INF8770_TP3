@@ -6,7 +6,7 @@ https://bcastell.com/posts/scene-detection-tutorial-part-1/
 import cv2
 
 
-def naive(cap) -> []:
+def naive(cap, **kwargs) -> []:
     """Compute the time of the cuts in the video,
     :return a list of the frame numbers where cut occurs
     """
