@@ -6,6 +6,7 @@ import sys
 import cv2
 
 import detectionalgo as algo
+import util
 
 
 class Video:
@@ -56,11 +57,15 @@ def main():
 
     print("Using Algorithm fade_cuts")
     video.set_algo('fade_cuts')
-    fade_cuts = video.get_cuts()
+    threshold = 70
+    fade_cuts = video.get_cuts(threshold=threshold)
+
     ground_truth = [350, 599, 1482, 1702, 1796, 2015]
     print("Ground Truth : {}".format(ground_truth))
     print("fade_cuts : {}".format(fade_cuts))
 
+    found = util.approximate_intersection(ground_truth, fade_cuts, 30)
+    print("Number of frames 'kind of found with fade_cuts detector using threshold {} : {}".format(threshold, found))
 
 
 if __name__ == "__main__":
