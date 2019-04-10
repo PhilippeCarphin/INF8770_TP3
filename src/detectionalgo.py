@@ -29,16 +29,22 @@ def naive(cap, **kwargs) -> []:
 
 
 def fade_cut_generator(cap: cv2.VideoCapture, threshold=100):
-    last_mean = 0
+    means = []
     while True:
         rv, im = cap.read()
         if not rv:
             break
         current_mean = im.mean()
+
+        if not means:
+            means.append(current_mean)
+            continue
+
+        last_mean = means[-1]
+        means.append(current_mean)
         if ((current_mean >= threshold and last_mean < threshold)
                 or (current_mean < threshold and last_mean >= threshold)):
             yield int(cap.get(cv2.CAP_PROP_POS_FRAMES))
-        last_mean = current_mean
 
 
 def fade_cuts(cap: cv2.VideoCapture, **kwargs) -> []:
