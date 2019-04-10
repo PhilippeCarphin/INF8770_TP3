@@ -62,3 +62,7 @@ def fade_cuts(cap: cv2.VideoCapture, **kwargs) -> []:
 
     cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # rewind video for further uses
     return cuts
+
+
+def hybrid(cap: cv2.VideoCapture, **kwargs) -> []:
+    return sorted(naive(cap, **kwargs) + fade_cuts(cap, **kwargs))

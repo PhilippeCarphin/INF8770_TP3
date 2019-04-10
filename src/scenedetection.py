@@ -68,6 +68,7 @@ def main():
 
     run_algo(video, 'naive', None)
     run_algo(video, 'fade_cuts', 100)
+    run_algo(video, 'hybrid', 100)
 
 
 if __name__ == "__main__":
