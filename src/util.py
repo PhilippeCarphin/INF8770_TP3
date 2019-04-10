@@ -68,14 +68,13 @@ def cross_check_with_ground_truth(cut_list, threshold=2):
     }
 
 
-
-
 def approximately_in(x, int_list, threshold):
     for y in int_list:
         if -threshold <= x - y <= threshold:
             return True
     else:
         return False
+
 
 def approximate_intersection(l1, l2, threshold):
     inter = []
