@@ -51,7 +51,7 @@ def fade_cuts(cap: cv2.VideoCapture, **kwargs) -> []:
     """
 
     threshold = kwargs.get('threshold', 100)
-    # Doint it with a for-loop simply to get prints as it finds them, otherwise,
+    # Doing it with a for-loop simply to get prints as it finds them, otherwise,
     # just replace with:
     # return list(fade_cut_generator(cap, threshold)
 
