@@ -5,6 +5,8 @@ https://bcastell.com/posts/scene-detection-tutorial-part-1/
 """
 import cv2
 
+import numpy as np
+
 
 def naive(cap, **kwargs) -> []:
     """Compute the time of the cuts in the video,
@@ -59,4 +61,46 @@ def fade_cuts(cap: cv2.VideoCapture, **kwargs) -> []:
     for cut in fade_cut_generator(cap, threshold):
         # print("cut found at {}".format(cut))
         cuts.append(cut)
+    return cuts
+
+def manhattan_distance(l1, l2):
+    return sum([abs(l1[i] - l2[i]) for i in range(4)])
+
+def multimean(im):
+    w = im.shape[0]
+    h = im.shape[1]
+    top_left     = im[    :w//2,     :h//2,:]
+    top_right    = im[w//2:    ,     :h//2,:]
+    bottom_left  = im[    :w//2, h//2:    ,:]
+    bottom_right = im[w//2:    , h//2:    ,:]
+    return [
+        top_left.mean(),
+        top_right.mean(),
+        bottom_left.mean(),
+        bottom_right.mean(),
+    ]
+
+def multimean_cuts_generator(cap: cv2.VideoCapture, **kwargs) -> []:
+
+    threshold = kwargs.get('threshold', 30)
+    multimeans = []
+    while True:
+        rv, im = cap.read()
+        if not rv:
+            break
+
+        current_multimean = multimean(im)
+
+        if multimeans and abs(manhattan_distance(multimeans[-1], current_multimean)) > threshold:
+            yield int(cap.get(cv2.CAP_PROP_POS_FRAMES))
+
+        multimeans.append(current_multimean)
+
+
+def multimean_cuts(cap: cv2.VideoCapture, **kwargs) -> []:
+    cuts = []
+    for cut in multimean_cuts_generator(cap, **kwargs):
+        print(cut)
+        cuts.append(cut)
+
     return cuts

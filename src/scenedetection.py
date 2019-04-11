@@ -55,18 +55,24 @@ def main():
 
     naive_cuts = video.get_cuts()
     print("video cuts detected at: {}".format(naive_cuts))
-
-    print("cross_check_with_ground_truth(naive_cuts :")
     pprint(util.cross_check_with_ground_truth(naive_cuts, 10))
 
 
-    print("Using Algorithm fade_cuts")
-    video.set_algo('fade_cuts')
-    threshold = 100
-    fade_cuts = video.get_cuts(threshold=threshold)
+    # print("Using Algorithm fade_cuts")
+    # video.set_algo('fade_cuts')
+    # threshold = 100
+    # fade_cuts = video.get_cuts(threshold=threshold)
 
-    print("cross_check_with_ground_truth :")
-    pprint(util.cross_check_with_ground_truth(fade_cuts, 10))
+    # print("cross_check_with_ground_truth :")
+    # pprint(util.cross_check_with_ground_truth(fade_cuts, 10))
+
+    video.set_algo('multimean_cuts')
+    threshold = 50
+    mm_cuts = video.get_cuts(threshold=threshold)
+    print(mm_cuts)
+    pprint(util.cross_check_with_ground_truth(mm_cuts, 10))
+
+
 
 if __name__ == "__main__":
     main()
