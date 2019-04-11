@@ -45,6 +45,7 @@ def run_algo(video, algo, threshold) -> None:
     video.set_algo(algo)
     cuts = video.get_cuts(threshold=threshold)
     report(algo, cuts)
+    return cuts
 
 
 def report(algo, cuts) -> None:
@@ -52,6 +53,7 @@ def report(algo, cuts) -> None:
     print("Using algo: '{}'".format(algo))
     print("Cross checking with ground truth:")
     util.verify_result(cuts, 10)
+    pprint(util.cross_check_with_ground_truth(cuts))
 
 
 def main():
@@ -66,10 +68,11 @@ def main():
         print("Could not open {}", filename)
         return
 
-    run_algo(video, 'naive', None)
-    run_algo(video, 'fade_cuts', 100)
-    run_algo(video, 'hybrid', 100)
+    # run_algo(video, 'naive', None)
+    # run_algo(video, 'fade_cuts', 100)
+    # run_algo(video, 'hybrid', 100)
     run_algo(video, 'multimean_cuts', 100)
+
 
 
 if __name__ == "__main__":

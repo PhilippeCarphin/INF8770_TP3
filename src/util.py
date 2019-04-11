@@ -67,7 +67,7 @@ def cross_check_with_ground_truth(cut_list, threshold=2):
     unfound_fades = []
     for interval in ground_truth['fades']:
         for cut in cut_list:
-            if interval[0] <= cut <= interval[1]:
+            if interval[0] - threshold <= cut <= interval[1] + threshold:
                 found_fades.append({
                     'cut': cut,
                     'fade_interval': interval
@@ -93,9 +93,7 @@ def cross_check_with_ground_truth(cut_list, threshold=2):
             return False
 
     for cut in cut_list:
-        if in_found_cuts(cut):
-            real_positives.append(cut)
-        elif in_found_intervals(cut):
+        if in_found_cuts(cut) or in_found_intervals(cut):
             real_positives.append(cut)
         else:
             false_positives.append(cut)
