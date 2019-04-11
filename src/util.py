@@ -47,16 +47,27 @@ def cross_check_with_ground_truth(cut_list, threshold=2):
 
     false_positives = []
     real_positives = []
-    for cut in cut_list:
-        if cut in found_cuts:
-            real_positives.append(cut)
-
+    def in_found_cuts(cut):
+        for fc in found_cuts:
+            if fc['cut'] == cut:
+                return True
         else:
-            for interval in found_fades:
-                if cut == interval['cut']:
-                    real_positives.append(cut)
-            else:
-                false_positives.append(cut)
+            return False
+
+    def in_found_intervals(cut):
+        for interval in found_fades:
+            if cut == interval['cut']:
+                return True
+        else:
+            return False
+
+    for cut in cut_list:
+        if in_found_cuts(cut):
+            real_positives.append(cut)
+        elif in_found_intervals(cut):
+            real_positives.append(cut)
+        else:
+            false_positives.append(cut)
 
     return {
         'found_cuts': found_cuts,
