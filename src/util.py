@@ -23,7 +23,7 @@ def verify_result(cut_list, threshold=2) -> None:
                 match = i
                 break
         print(str(expected).ljust(4) + '\t\t' +
-              (str(match) if match else '\t') + '\t', end='')
+              (str(match).rjust(4) if match else '\t') + '\t', end='')
         print(colored('Found', 'green') if match else
               colored("Not found at all", "red"))
 
