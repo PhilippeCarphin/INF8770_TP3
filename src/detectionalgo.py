@@ -4,7 +4,7 @@ references:
 https://bcastell.com/posts/scene-detection-tutorial-part-1/
 """
 import cv2
-
+from PIL import Image
 import numpy as np
 
 
@@ -112,3 +112,20 @@ def multimean_cuts(cap: cv2.VideoCapture, **kwargs) -> []:
         cuts.append(cut)
 
     return cuts
+
+
+def edge_detection(cap: cv2.VideoCapture, **kwargs) -> []:
+    cuts = []
+    while True:
+        (rv, im) = cap.read()  # im is a valid image if and only if rv is true
+        if not rv:
+            break
+        E = cv2.Sobel(im, cv2.CV_8U, 1, 1)
+        img = Image.fromarray(E, 'RGB')
+        img.save('my.png')
+        img.show()
+        break
+
+    cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # rewind video for further uses
+    return cuts
+
