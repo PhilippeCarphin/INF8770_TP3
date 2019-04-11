@@ -6,6 +6,8 @@ https://bcastell.com/posts/scene-detection-tutorial-part-1/
 import cv2
 from PIL import Image
 import numpy as np
+import matplotlib.pyplot as plt
+import scipy.ndimage as ndimage
 
 
 def naive(cap: cv2.VideoCapture, **kwargs) -> []:
@@ -123,17 +125,25 @@ def edge_detection(cap: cv2.VideoCapture, **kwargs) -> []:
             break
         im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)  # convert from BGR to RGB
 
-        # im = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
-        Ex = 255 - cv2.Sobel(im, cv2.CV_8U, 1, 0)
-        Ey = 255 - cv2.Sobel(im, cv2.CV_8U, 0, 1)
-
         i += 1
-        if i == 350:
-            img = Image.fromarray(Ex)
-            img.show()
-            img = Image.fromarray(Ey)
-            img.show()
+        if i < 50:
+            E = cv2.Canny(im, 0, 500)
+            D = expand_edges(E)
+            print(i)
+
+        # plt.plot(122), plt.imshow(E, cmap='gray')
+        # plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
+        # plt.show()
 
     cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # rewind video for further uses
     return cuts
 
+
+def expand_edges(img: np.array) -> np.array:
+    neighbors = np.array([[1, 1, 1],
+                          [1, 0, 1],
+                          [1, 1, 1]])
+    return ndimage.generic_filter(
+        img,
+        lambda x: 1 if x.any() else 0,
+        footprint=neighbors)

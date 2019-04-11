@@ -17,6 +17,8 @@ class Video:
         if not self.cap.isOpened():
             raise ValueError(filename)
         self.detection_algo = getattr(algo, 'naive')
+        # print(self.get_dimensions())
+
 
     def __del__(self):
         self.cap.release()
@@ -45,16 +47,14 @@ def run_algo(video, algo, threshold) -> None:
     video.set_algo(algo)
     cuts = video.get_cuts(threshold=threshold)
     report(algo, cuts)
-    return cuts
 
 
 def report(algo, cuts) -> None:
     print("*" * 40)
     print("Using algo: '{}'".format(algo))
+    print(cuts)
     print("Cross checking with ground truth:")
     util.verify_result(cuts, 10)
-    print("False positives : ...")
-    pprint(util.cross_check_with_ground_truth(cuts)['false_positives'])
 
 
 def main():
@@ -72,7 +72,7 @@ def main():
     # run_algo(video, 'naive', None)
     # run_algo(video, 'fade_cuts', 100)
     # run_algo(video, 'hybrid', 100)
-    run_algo(video, 'multimean_cuts', 100)
+    run_algo(video, 'edge_detection', None)
 
 
 if __name__ == "__main__":
