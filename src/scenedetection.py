@@ -53,7 +53,8 @@ def report(algo, cuts) -> None:
     print("Using algo: '{}'".format(algo))
     print("Cross checking with ground truth:")
     util.verify_result(cuts, 10)
-    pprint(util.cross_check_with_ground_truth(cuts))
+    print("False positives : ...")
+    pprint(util.cross_check_with_ground_truth(cuts)['false_positives'])
 
 
 def main():

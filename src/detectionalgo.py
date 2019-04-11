@@ -109,7 +109,6 @@ def multimean_cuts_generator(cap: cv2.VideoCapture, **kwargs) -> []:
 def multimean_cuts(cap: cv2.VideoCapture, **kwargs) -> []:
     cuts = []
     for cut in multimean_cuts_generator(cap, **kwargs):
-        print(cut)
         cuts.append(cut)
 
     return cuts
