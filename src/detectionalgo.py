@@ -116,15 +116,23 @@ def multimean_cuts(cap: cv2.VideoCapture, **kwargs) -> []:
 
 def edge_detection(cap: cv2.VideoCapture, **kwargs) -> []:
     cuts = []
+    i = 0
     while True:
         (rv, im) = cap.read()  # im is a valid image if and only if rv is true
         if not rv:
             break
-        E = cv2.Sobel(im, cv2.CV_8U, 1, 1)
-        img = Image.fromarray(E, 'RGB')
-        img.save('my.png')
-        img.show()
-        break
+        im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)  # convert from BGR to RGB
+
+        # im = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
+        Ex = 255 - cv2.Sobel(im, cv2.CV_8U, 1, 0)
+        Ey = 255 - cv2.Sobel(im, cv2.CV_8U, 0, 1)
+
+        i += 1
+        if i == 350:
+            img = Image.fromarray(Ex)
+            img.show()
+            img = Image.fromarray(Ey)
+            img.show()
 
     cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # rewind video for further uses
     return cuts
