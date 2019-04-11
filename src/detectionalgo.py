@@ -8,7 +8,7 @@ import cv2
 import numpy as np
 
 
-def naive(cap, **kwargs) -> []:
+def naive(cap: cv2.VideoCapture, **kwargs) -> []:
     """Compute the time of the cuts in the video,
     :return a list of the frame numbers where cut occurs
     """
@@ -53,7 +53,7 @@ def fade_cuts(cap: cv2.VideoCapture, **kwargs) -> []:
     """
 
     threshold = kwargs.get('threshold', 100)
-    # Doint it with a for-loop simply to get prints as it finds them, otherwise,
+    # Doing it with a for-loop simply to get prints as it finds them, otherwise,
     # just replace with:
     # return list(fade_cut_generator(cap, threshold)
 
@@ -61,10 +61,18 @@ def fade_cuts(cap: cv2.VideoCapture, **kwargs) -> []:
     for cut in fade_cut_generator(cap, threshold):
         # print("cut found at {}".format(cut))
         cuts.append(cut)
+
+    cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # rewind video for further uses
     return cuts
+
+
+def hybrid(cap: cv2.VideoCapture, **kwargs) -> []:
+    return sorted(naive(cap, **kwargs) + fade_cuts(cap, **kwargs))
+
 
 def manhattan_distance(l1, l2):
     return sum([abs(l1[i] - l2[i]) for i in range(4)])
+
 
 def multimean(im):
     w = im.shape[0]
@@ -79,6 +87,7 @@ def multimean(im):
         bottom_left.mean(),
         bottom_right.mean(),
     ]
+
 
 def multimean_cuts_generator(cap: cv2.VideoCapture, **kwargs) -> []:
 

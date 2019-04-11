@@ -41,6 +41,19 @@ class Video:
         return cuts
 
 
+def run_algo(video, algo, threshold) -> None:
+    video.set_algo(algo)
+    cuts = video.get_cuts(threshold=threshold)
+    report(algo, cuts)
+
+
+def report(algo, cuts) -> None:
+    print("*" * 40)
+    print("Using algo: '{}'".format(algo))
+    print("Cross checking with ground truth:")
+    util.verify_result(cuts, 10)
+
+
 def main():
     if len(sys.argv) < 2:
         print("Error - file name must be specified as first argument.")
@@ -53,25 +66,10 @@ def main():
         print("Could not open {}", filename)
         return
 
-    naive_cuts = video.get_cuts()
-    print("video cuts detected at: {}".format(naive_cuts))
-    pprint(util.cross_check_with_ground_truth(naive_cuts, 10))
-
-
-    # print("Using Algorithm fade_cuts")
-    # video.set_algo('fade_cuts')
-    # threshold = 100
-    # fade_cuts = video.get_cuts(threshold=threshold)
-
-    # print("cross_check_with_ground_truth :")
-    # pprint(util.cross_check_with_ground_truth(fade_cuts, 10))
-
-    video.set_algo('multimean_cuts')
-    threshold = 50
-    mm_cuts = video.get_cuts(threshold=threshold)
-    print(mm_cuts)
-    pprint(util.cross_check_with_ground_truth(mm_cuts, 10))
-
+    run_algo(video, 'naive', None)
+    run_algo(video, 'fade_cuts', 100)
+    run_algo(video, 'hybrid', 100)
+    run_algo(video, 'multimean_cuts', 100)
 
 
 if __name__ == "__main__":
