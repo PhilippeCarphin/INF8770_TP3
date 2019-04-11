@@ -75,6 +75,5 @@ def main():
     run_algo(video, 'multimean_cuts', 100)
 
 
-
 if __name__ == "__main__":
     main()

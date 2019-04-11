@@ -77,10 +77,10 @@ def manhattan_distance(l1, l2):
 def multimean(im):
     w = im.shape[0]
     h = im.shape[1]
-    top_left     = im[    :w//2,     :h//2,:]
-    top_right    = im[w//2:    ,     :h//2,:]
-    bottom_left  = im[    :w//2, h//2:    ,:]
-    bottom_right = im[w//2:    , h//2:    ,:]
+    top_left = im[:w // 2, :h // 2, :]
+    top_right = im[w // 2:, :h // 2, :]
+    bottom_left = im[:w // 2, h // 2:, :]
+    bottom_right = im[w // 2:, h // 2:, :]
     return [
         top_left.mean(),
         top_right.mean(),
@@ -90,7 +90,6 @@ def multimean(im):
 
 
 def multimean_cuts_generator(cap: cv2.VideoCapture, **kwargs) -> []:
-
     threshold = kwargs.get('threshold', 30)
     multimeans = []
     while True:
@@ -100,7 +99,8 @@ def multimean_cuts_generator(cap: cv2.VideoCapture, **kwargs) -> []:
 
         current_multimean = multimean(im)
 
-        if multimeans and abs(manhattan_distance(multimeans[-1], current_multimean)) > threshold:
+        if multimeans and abs(manhattan_distance(multimeans[-1],
+                                                 current_multimean)) > threshold:
             yield int(cap.get(cv2.CAP_PROP_POS_FRAMES))
 
         multimeans.append(current_multimean)

@@ -1,6 +1,5 @@
 from termcolor import colored, cprint
 
-
 ground_truth = {
     'cuts': [350, 599, 1482, 1702, 1796, 2015],
     'fades': [
@@ -43,7 +42,6 @@ def verify_result(cut_list, threshold=2) -> None:
 
 
 def cross_check_with_ground_truth(cut_list, threshold=2):
-
     # TODO Add reporting of false positives:
     #  I.E. Elements in cut_list that do not correspond to an
     #  actual scene change
@@ -78,6 +76,7 @@ def cross_check_with_ground_truth(cut_list, threshold=2):
 
     false_positives = []
     real_positives = []
+
     def in_found_cuts(cut):
         for fc in found_cuts:
             if fc['cut'] == cut:
