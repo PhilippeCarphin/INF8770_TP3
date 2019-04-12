@@ -182,3 +182,11 @@ def expand_edges(img: np.array) -> np.array:
         img,
         lambda x: 1 if x.any() else 0,
         footprint=neighbors)
+
+    # return cv2.GaussianBlur(img, (5, 5), 1)
+
+
+def plot_array(arr) -> None:
+    plt.plot(122), plt.imshow(arr, cmap='gray')
+    plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
+    plt.show()
