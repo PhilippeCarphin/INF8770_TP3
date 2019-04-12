@@ -52,7 +52,7 @@ def run_algo(video, algo, threshold) -> None:
 def report(algo, cuts) -> None:
     print("*" * 40)
     print("Using algo: '{}'".format(algo))
-    print(cuts)
+    # print(cuts)
     print("Cross checking with ground truth:")
     util.verify_result(cuts, 10)
     false_pos = util.count_false_positives(cuts)
