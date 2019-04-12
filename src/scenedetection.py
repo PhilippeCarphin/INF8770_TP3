@@ -72,7 +72,8 @@ def main():
     # run_algo(video, 'naive', None)
     # run_algo(video, 'fade_cuts', 100)
     # run_algo(video, 'hybrid', 100)
-    run_algo(video, 'edge_detection', None)
+    # run_algo(video, 'edge_detection', None)
+    run_algo(video, 'edge_detection_cached', None)
 
 
 if __name__ == "__main__":

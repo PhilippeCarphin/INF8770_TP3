@@ -9,6 +9,7 @@ with open('rho_value.json') as f:
 rho_in = [ d[1] for d in data]
 rho_out = [ d[2] for d in data]
 rho = [ max(d[1], d[2]) for d in data]
+rho_diff = [ d[1] - d[2] for d in data]
 
 plt.plot(rho_in)
 plt.title('Rho_in pour chaque trame de la vidéo')
@@ -18,6 +19,9 @@ plt.title('Rho_out pour chaque trame de la vidéo')
 plt.show()
 plt.plot(rho)
 plt.title('Rho pour chaque trame de la vidéo')
+plt.show()
+plt.plot(rho_diff)
+plt.title('rho_diff pour chaque trame de la vidéo')
 plt.show()
 pprint(rho_in)
 

@@ -170,3 +170,30 @@ def expand_edges(img: np.array) -> np.array:
         img,
         lambda x: 0 if x.any() else 1,
         footprint=neighbors)
+
+
+def edge_detection_cached(cap: cv2.VideoCapture, **kwargs) -> []:
+    with open('rho_value.json') as f:
+        rho_values = json.loads(f.read())
+
+    threshold = 0.8
+    intervals = []
+    rho_max_values = [max(d[1], d[2]) for d in rho_values]
+    L = len(rho_max_values)
+    i = 0
+    while i < L:
+
+        rho = rho_max_values[i]
+        if rho > threshold:
+            start = i
+            while i < L and rho_max_values[i] > threshold:
+                i += 1
+
+            intervals.append((start, i))
+
+        i += 1
+
+    print(intervals)
+    return [int((interval[0] + interval[1])/2.0) for interval in intervals]
+
+
