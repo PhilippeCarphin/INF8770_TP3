@@ -121,3 +121,25 @@ def approximate_intersection(l1, l2, threshold):
         if approximately_in(x, l2, threshold):
             inter.append(x)
     return inter
+
+
+def count_false_positives(cuts: []) -> []:
+    threshold = 2
+
+    def test_cut(val) -> bool:
+        for c in ground_truth['cuts']:
+            if c - threshold < val < c + threshold:
+                return True
+        return False
+
+    def test_fade(val) -> bool:
+        for c in ground_truth['fades']:
+            if c[0] - threshold < val < c[1] + threshold:
+                return True
+        return False
+
+    false_positives = []
+    for cut in cuts:
+        if not test_cut(cut) and not test_fade(cut):
+            false_positives.append(cut)
+    return false_positives

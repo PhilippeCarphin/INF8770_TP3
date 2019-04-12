@@ -22,12 +22,47 @@ def naive(cap: cv2.VideoCapture, **kwargs) -> []:
         if not rv:
             break
         frame_mean = im.mean()
-        threshold = 20
+        threshold = 5
         if means and abs(frame_mean - means[-1]) > threshold:
             frame_no = int(cap.get(cv2.CAP_PROP_POS_FRAMES))
             cuts.append(frame_no)
 
         means.append(frame_mean)
+
+    cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # rewind video for further uses
+    return cuts
+
+
+def naive_double_cap(cap: cv2.VideoCapture, **kwargs) -> []:
+    """Compute the time of the cuts in the video,
+    :return a list of the frame numbers where cut occurs
+    """
+    tb = 22
+    ts = 2
+
+    means = []
+    cuts = []
+    Fs = None
+    while True:
+        (rv, im) = cap.read()  # im is a valid image if and only if rv is true
+        if not rv:
+            break
+        frame_no = int(cap.get(cv2.CAP_PROP_POS_FRAMES))
+        means.append(im.mean())
+        if len(means) == 1:
+            continue
+        delta = abs(means[-2] - means[-1])
+        if delta > tb:
+            cuts.append(frame_no)
+            Fs = None
+        elif delta > ts:
+            if not Fs:
+                Fs = means[-1]
+            elif abs(means[-1] - Fs) > tb:
+                cuts.append(frame_no)
+                Fs = None
+        else:
+            Fs = None
 
     cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # rewind video for further uses
     return cuts
@@ -171,7 +206,6 @@ def expand_edges(img: np.array) -> np.array:
         lambda x: 0 if x.any() else 1,
         footprint=neighbors)
 
-
 def edge_detection_cached(cap: cv2.VideoCapture, **kwargs) -> []:
     with open('rho_value.json') as f:
         rho_values = json.loads(f.read())
@@ -196,4 +230,9 @@ def edge_detection_cached(cap: cv2.VideoCapture, **kwargs) -> []:
     print(intervals)
     return [int((interval[0] + interval[1])/2.0) for interval in intervals]
 
+
+def plot_array(arr) -> None:
+    plt.plot(122), plt.imshow(arr, cmap='gray')
+    plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
+    plt.show()
 

@@ -55,6 +55,8 @@ def report(algo, cuts) -> None:
     print(cuts)
     print("Cross checking with ground truth:")
     util.verify_result(cuts, 10)
+    false_pos = util.count_false_positives(cuts)
+    print("false positives : {} ".format(len(false_pos)) + str(false_pos))
 
 
 def main():
