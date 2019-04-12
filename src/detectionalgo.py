@@ -168,5 +168,5 @@ def expand_edges(img: np.array) -> np.array:
                           [1, 1, 1]])
     return ndimage.generic_filter(
         img,
-        lambda x: 1 if x.any() else 0,
+        lambda x: 0 if x.any() else 1,
         footprint=neighbors)
