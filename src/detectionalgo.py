@@ -36,32 +36,32 @@ def naive_double_cap(cap: cv2.VideoCapture, **kwargs) -> []:
     """Compute the time of the cuts in the video,
     :return a list of the frame numbers where cut occurs
     """
-    tb = 5
-    ts = 1
+    tb = 22
+    ts = 2
 
     means = []
     cuts = []
     Fs = None
-    checking_for_fade = False
     while True:
         (rv, im) = cap.read()  # im is a valid image if and only if rv is true
         if not rv:
             break
-        frame_mean = im.mean()
-
         frame_no = int(cap.get(cv2.CAP_PROP_POS_FRAMES))
-        if means and abs(frame_mean - means[-1]) > tb:
+        means.append(im.mean())
+        if len(means) == 1:
+            continue
+        delta = abs(means[-2] - means[-1])
+        if delta > tb:
             cuts.append(frame_no)
-        elif means and abs(frame_mean - means[-1]) > ts:
-            if checking_for_fade and Fs and abs(frame_mean - Fs) > tb:
+            Fs = None
+        elif delta > ts:
+            if not Fs:
+                Fs = means[-1]
+            elif abs(means[-1] - Fs) > tb:
                 cuts.append(frame_no)
                 Fs = None
-            elif not checking_for_fade:
-                Fs = frame_mean
         else:
             Fs = None
-
-        means.append(frame_mean)
 
     cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # rewind video for further uses
     return cuts
