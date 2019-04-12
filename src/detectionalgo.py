@@ -22,7 +22,7 @@ def naive(cap: cv2.VideoCapture, **kwargs) -> []:
         if not rv:
             break
         frame_mean = im.mean()
-        threshold = 20
+        threshold = 5
         if means and abs(frame_mean - means[-1]) > threshold:
             frame_no = int(cap.get(cv2.CAP_PROP_POS_FRAMES))
             cuts.append(frame_no)

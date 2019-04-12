@@ -124,7 +124,7 @@ def approximate_intersection(l1, l2, threshold):
 
 
 def count_false_positives(cuts: []) -> []:
-    threshold = 1
+    threshold = 2
 
     def test_cut(val) -> bool:
         for c in ground_truth['cuts']:
